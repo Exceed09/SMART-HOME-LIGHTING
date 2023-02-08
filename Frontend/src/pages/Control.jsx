@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from '../components/Button';
 import TextFormField from '../components/TextFormField';
+import "../styles/Control.css"
 
 const Control = () => {
     const [isOn, setIsOn] = useState(false)
@@ -10,17 +11,19 @@ const Control = () => {
     let statusTextAuto = isAuto ? "Auto" : "Manual"
 
     return (
-        <>
-            <Button head="Status" name={statusTextOn} onClick={
-                e => setIsOn(!isOn)
-            } />
+        <>  
+            <div className="con-compo">
+                <h1>Room 1</h1>
+                <Button head="Status" name={statusTextOn} onClick={
+                    e => setIsOn(!isOn)
+                } />
 
-            <Button head="Auto" name={statusTextAuto} onClick={
-                e => setIsAuto(!isAuto)
-            } />
+                <Button head="Auto" name={statusTextAuto} onClick={
+                    e => setIsAuto(!isAuto)
+                } />
 
-            <TextFormField name="Brightest" value={brightest} onChange={e => setBrightest(e.target.value)} />
-
+                <TextFormField name="Brightness" value={brightest} onChange={e => setBrightest(e.target.value)} />
+            </div>
         </>
     )
 }

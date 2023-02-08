@@ -3,7 +3,7 @@ import '../styles/Button.css'
 
 const Button = ({ head, name, type, onClick }) => {
     return (
-        <h1> {head}
+        <h1 className='head-con'> {head} {"   "}
             <button className="button" type={type} onClick={onClick}>
                 {name}
             </button>

@@ -15,3 +15,8 @@
     outline: solid black;
     cursor: pointer;
   }
+
+.head-con{
+    margin: auto;
+    width: 70%;
+}
