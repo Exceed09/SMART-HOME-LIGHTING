@@ -39,7 +39,7 @@ def get_all_rooms():
 
 
 @router.get("/front")
-def get_all_rooms():
+def show_all_rooms():
     result = []
     for room in collection.find({}):
         result.append({
