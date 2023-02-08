@@ -36,3 +36,17 @@ def get_all_rooms():
         })
     collection.update_many({}, {"$set": {"is_change": False}})
     return {"message": result}
+
+
+@router.get("/front")
+def get_all_rooms():
+    result = []
+    for room in collection.find({}):
+        result.append({
+            "room_id": room["room_id"],
+            "mode_auto": room["mode_auto"],
+            "on_status": room["on_status"],
+            "brightness": room["brightness"],
+            "is_change": room["is_change"]
+        })
+    return {"message": result}
