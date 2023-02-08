@@ -1,16 +1,21 @@
 import axios from "axios"
 
-export async function getPlaces() {
-    const res = await axios.get("http://localhost:9000/places")
+export async function GetData() {
+    const res = await axios.get(`http://group9.exceed19.online/rooms/front`)
     return res.data
 }
 
-export async function getPlace(id) {
-    const res = await axios.get(`http://localhost:9000/places/${id}`)
+export async function SetSwitch(id, status) {
+    const res = await axios.put(`http://group9.exceed19.online/switch/${id}/${status}`)
     return res.data
 }
 
-export async function addPlace(place) {
-    const res = await axios.post(`http://localhost:9000/places`, place)
+export async function SetMode(id, status) {
+    const res = await axios.put(`http://group9.exceed19.online/mode/${id}/${status}`)
+    return res.data
+}
+
+export async function SetBrightness(id, status) {
+    const res = await axios.put(`http://group9.exceed19.online/brightness/${id}/${status}`)
     return res.data
 }

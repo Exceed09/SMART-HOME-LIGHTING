@@ -7,11 +7,11 @@ function App() {
 
   return (
     <>
-      <h1 class="webHead"> SMART-HOME LIGHT CONTROL</h1>
+      <h1 className="webHead"> SMART-HOME LIGHT CONTROL</h1>
       <div className="card-list">
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>
+        <Card id={1}></Card>
+        <Card id={2}></Card>
+        <Card id={3}></Card>
       </div>
     </>
   )
