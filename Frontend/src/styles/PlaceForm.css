@@ -1,0 +1,16 @@
+.form-field {
+    display: block;
+    gap: 1rem;
+}
+
+.form-field > label {
+    margin: auto;
+    padding: .5rem;
+    min-width: 10rem;
+}
+
+.input-field {
+    margin: auto;
+    border: black solid;
+    border-radius: .5rem;
+}

@@ -1,0 +1,12 @@
+.card-list{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding: 1rem;
+}
+
+.card{
+    margin: auto;
+    width: 40%;
+    display: flex;
+}

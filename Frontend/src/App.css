@@ -1,0 +1,12 @@
+.webHead{
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 50%;
+    text-align: center;
+    color: white;
+    background-color: black;
+    font-size: 40px;
+    padding: 2rem;
+    border: 1px solid black;
+}
