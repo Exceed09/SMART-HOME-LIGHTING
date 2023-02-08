@@ -27,8 +27,10 @@ collection = db[COLLECTION_NAME]
 
 @router.put("/{room_id}/{on_status}")
 def switch_on_off(room_id: int, on_status: bool):
-    if not (0<room_id<4):
+    if not (0 < room_id < 4):
         raise HTTPException(404, detail="Invalid Value")
+    if collection.find_one({"room_id": room_id})['mode_auto']:
+        raise HTTPException(404, detail="cannot switch on/off light in automatic mode.")
     collection.update_one({"room_id": room_id}, update={"$set": {"on_status": on_status, "is_change": True}})
     result = list()
     for room in collection.find({}):
