@@ -18,6 +18,7 @@ void Connect_Wifi();
 
 // void GET_data(void *param);
 void manual_input(void *param);
+void disco(void *param);
 
 void room1(void *param);
 void room2(void *param);
@@ -28,13 +29,14 @@ TaskHandle_t TaskB = NULL;
 TaskHandle_t TaskC = NULL;
 TaskHandle_t TaskD = NULL;
 TaskHandle_t TaskE = NULL;
+TaskHandle_t TaskF = NULL;
 
 Bounce debouncer = Bounce();
-bool disco_mode = false;
+int disco_mode = 0;
 
 //room1(red), room2(yellow), room3(green)
 bool modeauto_room[3] = {true, false, false}; 
-int brightness_room[3] = {255, 255, 0};
+int brightness_room[3] = {255, 255, 100};
 bool onstatus_room[3] = {false, false, false};
 bool change_room[3] = {false, false, false};
 
@@ -66,10 +68,12 @@ void setup() {
 
   // xTaskCreatePinnedToCore(GET_data, "GET_data", 20*1024, NULL, 1, &TaskB, 0);
   xTaskCreatePinnedToCore(manual_input, "manual_input", 10*1024, NULL, 1, &TaskA, 0);
+  xTaskCreatePinnedToCore(disco, "disco", 3000, NULL, 1, &TaskF, 0);
 
   xTaskCreatePinnedToCore(room1, "room1", 3000, NULL, 1, &TaskC, 1);
   xTaskCreatePinnedToCore(room2, "room2", 3000, NULL, 1, &TaskD, 1);
   xTaskCreatePinnedToCore(room3, "room3", 3000, NULL, 1, &TaskE, 1);
+
 }
 
 void loop() {
@@ -78,42 +82,47 @@ void loop() {
 
 void manual_input(void *param) {
   while (1) {
+    touch_value_room1 = touchRead(switch_room1);
+    touch_value_room2 = touchRead(switch_room2);
+    touch_value_room3 = touchRead(switch_room3);
+    
+    if (touch_value_room1 >= threshold) {
+      ready_room1 = 1;
+    } else if (touch_value_room1 < threshold && ready_room1) {
+      if (!modeauto_room[0]) {
+        onstatus_room[0] = !onstatus_room[0];
+        ready_room1 = 0;
+        change_room[0] = true;
+      } 
+    }
+
+    if (touch_value_room2 >= threshold) {
+      ready_room2 = 1;
+    } else if (touch_value_room2 < threshold && ready_room2) {
+      if (!modeauto_room[1]) {
+        onstatus_room[1] = !onstatus_room[1];
+        ready_room2 = 0;
+        change_room[1] = true;
+      } 
+    }
+
+    if (touch_value_room3 >= threshold) {
+      ready_room3 = 1;
+    } else if (touch_value_room3 < threshold && ready_room3) {
+      if (!modeauto_room[2]) {
+        onstatus_room[2] = !onstatus_room[2];
+        ready_room3 = 0;
+        change_room[2] = true;
+      } 
+    }
+    vTaskDelay(100/portTICK_PERIOD_MS);
+    
     debouncer.update();
     if (debouncer.fell()) {
-      disco_mode = !disco_mode;
-    } else {
-      touch_value_room1 = touchRead(switch_room1);
-      touch_value_room2 = touchRead(switch_room2);
-      touch_value_room3 = touchRead(switch_room3);
-      
-      if (touch_value_room1 >= threshold) {
-        ready_room1 = 1;
-      } else if (touch_value_room1 < threshold && ready_room1) {
-        if (!modeauto_room[0]) {
-          onstatus_room[0] = !onstatus_room[0];
-          ready_room1 = 0;
-          change_room[0] = true;
-        } 
-      }
-
-      if (touch_value_room2 >= threshold) {
-        ready_room2 = 1;
-      } else if (touch_value_room2 < threshold && ready_room2) {
-        if (!modeauto_room[1]) {
-          onstatus_room[1] = !onstatus_room[1];
-          ready_room2 = 0;
-          change_room[1] = true;
-        } 
-      }
-
-      if (touch_value_room3 >= threshold) {
-        ready_room3 = 1;
-      } else if (touch_value_room3 < threshold && ready_room3) {
-        if (!modeauto_room[2]) {
-          onstatus_room[2] = !onstatus_room[2];
-          ready_room3 = 0;
-          change_room[2] = true;
-        } 
+      if (disco_mode) {
+        disco_mode = 0;
+      } else {
+        disco_mode = 1;
       }
       vTaskDelay(100/portTICK_PERIOD_MS);
     }
@@ -157,10 +166,43 @@ void manual_input(void *param) {
 //   }
 // }
 
+void disco(void *param) {
+  while (1) {
+    if (disco_mode) {
+      ledcWrite(0, 255);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+
+      ledcWrite(1, 255);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+
+      ledcWrite(2, 255);
+      
+      vTaskDelay(25/portTICK_PERIOD_MS);
+      
+      ledcWrite(3, 255);
+      ledcWrite(0, 0);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+
+      ledcWrite(1, 0);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+
+      ledcWrite(2, 0);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+
+      ledcWrite(3, 0);
+      vTaskDelay(25/portTICK_PERIOD_MS);
+    } else {
+      vTaskDelay(100/portTICK_PERIOD_MS);
+    }
+  }
+}
+
 void room1(void *param) {
   while (1) {
-    if (disco_mode) continue;
-    if (modeauto_room[0]) {
+    if (disco_mode) {
+      Serial.println("disco_mode");
+      vTaskDelay(50/portTICK_PERIOD_MS);
+    } else if (modeauto_room[0]) {
       //auto mode
       if (analogRead(ldr) > 2500) {
         ledcWrite(1, 0);
@@ -183,8 +225,10 @@ void room1(void *param) {
 
 void room2(void *param) {
   while (1) {
-    if (disco_mode) continue;
-    if (modeauto_room[1]) {
+    if (disco_mode) {
+      Serial.println("disco_mode");
+      vTaskDelay(50/portTICK_PERIOD_MS);
+    } else if (modeauto_room[1]) {
       //auto mode
       if (analogRead(ldr) > 2500) {
         ledcWrite(2, 0);
@@ -207,8 +251,10 @@ void room2(void *param) {
 
 void room3(void *param) {
   while (1) {
-    if (disco_mode) continue;
-    if (modeauto_room[2]) {
+    if (disco_mode) {
+      Serial.println("disco_mode");
+      vTaskDelay(50/portTICK_PERIOD_MS);
+    } else if (modeauto_room[2]) {
       //auto mode
       if (analogRead(ldr) > 2500) {
         ledcWrite(3, 0);
@@ -228,4 +274,6 @@ void room3(void *param) {
     vTaskDelay(50/portTICK_PERIOD_MS);
   }   
 }
+
+
 
