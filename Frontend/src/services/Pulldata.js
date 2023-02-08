@@ -16,6 +16,12 @@ export async function SetMode(id, status) {
 }
 
 export async function SetBrightness(id, status) {
+    if (status < 1) {
+        status = 1
+    }
+    if (status > 255) {
+        status = 255
+    }
     const res = await axios.put(`http://group9.exceed19.online/exceed09/brightness/${id}/${status}`)
     return res.data
 }
