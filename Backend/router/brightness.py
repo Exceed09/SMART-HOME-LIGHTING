@@ -8,8 +8,8 @@ import urllib
 
 load_dotenv('.env')
 
-user = os.getenv('username')
-password =  os.getenv('password')
+user = os.getenv('name')
+password = os.getenv('password')
 client = MongoClient(f'mongodb://{user}:{password}@mongo.exceed19.online:8443/?authMechanism=DEFAULT')
 
 db = client["exceed09"]
@@ -19,6 +19,7 @@ router = APIRouter(
     prefix="/brightness",
     tags=["brightness"]
 )
+
 
 @router.put("/{room_id}/{brightness}")
 def get_brightness_change(room_id : int, brightness : int):

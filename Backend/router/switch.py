@@ -16,13 +16,14 @@ MONGO_DB_DOM = "mongo.exceed19.online"
 MONGO_DB_PORT = 8443
 
 load_dotenv(".env")
-username = getenv("username")
+username = getenv("name")
 password = getenv("password")
 
 client = MongoClient(f"mongodb://{username}:{password}@{MONGO_DB_DOM}:{MONGO_DB_PORT}/?authMechanism=DEFAULT")
 
 db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
+
 
 @router.put("/{room_id}/{on_status}")
 def switch_on_off(room_id: int, on_status: bool):
