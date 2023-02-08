@@ -22,11 +22,11 @@ router = APIRouter(
 
 @router.put("/{room_id}/{brightness}")
 def get_brightness_change(room_id : int, brightness : int):
-    if not (room_id < 1 or room_id > 4) and not (brightness < 1 or brightness > 255):
+    if not (room_id < 1 or room_id > 3) and not (brightness < 1 or brightness > 255):
         collection.update_one({"room_id":room_id}, {"$set":{"brightness":brightness, "is_change": True}})
         room = list(collection.find({"room_id": room_id}))[0]
         return {"room_id": room["room_id"], "brightness": room["brightness"], "is_change": room["is_change"]}
-    if room_id < 1 or room_id > 4:
+    if room_id < 1 or room_id > 3:
         return HTTPException(status_code=404, detail="Room not found")
     if brightness < 1 or brightness > 255:
         return HTTPException(status_code=404, detail="Brightness invalid")
