@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from router import switch, mode, brightness
+from router import switch, mode, brightness, rooms
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,6 +15,7 @@ app.add_middleware(
 app.include_router(switch.router)
 app.include_router(mode.router)
 app.include_router(brightness.router)
+app.include_router(rooms.router)
 
 
 @app.get("/")
