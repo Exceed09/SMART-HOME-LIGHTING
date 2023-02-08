@@ -4,7 +4,7 @@ from os import getenv
 from pymongo import MongoClient
 
 router = APIRouter(
-    prefix="/rooms",
+    prefix="/exceed09/rooms",
     tags=["rooms"]
 )
 

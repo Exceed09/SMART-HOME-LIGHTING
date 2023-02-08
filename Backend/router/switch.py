@@ -6,7 +6,7 @@ from os import getenv
 from pymongo import MongoClient
 
 router = APIRouter(
-    prefix="/switch",
+    prefix="/exceed09/switch",
     tags=["switch"]
 )
 

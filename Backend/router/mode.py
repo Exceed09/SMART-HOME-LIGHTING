@@ -13,7 +13,7 @@ PASSWORD = os.getenv('password')
 MONGO_KU_SERVER_URL = f"mongodb://{USERNAME}:{PASSWORD}@mongo.exceed19.online:8443/?authMechanism=DEFAULT"
 
 router = APIRouter(
-    prefix="/mode",
+    prefix="/exceed09/mode",
     tags=["mode"]
 )
 

@@ -16,7 +16,7 @@ db = client["exceed09"]
 collection = db["SMART_HOME_LIGHTING"]
 
 router = APIRouter(
-    prefix="/brightness",
+    prefix="/exceed09/brightness",
     tags=["brightness"]
 )
 
