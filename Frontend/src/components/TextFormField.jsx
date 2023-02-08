@@ -5,7 +5,7 @@ const TextFormField = ({ name, value, onChange }) => {
     return (
         <div className="form-field">
             <label>{name}</label>
-            <input className="input-field" type="text" value={value} onChange={onChange} />
+            <input className="input-field" type="number" value={value} onChange={onChange} />
         </div>
     )
 }

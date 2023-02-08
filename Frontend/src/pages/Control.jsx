@@ -37,7 +37,7 @@ const Control = ({ id }) => {
                 } />
 
                 <TextFormField name="Brightness" value={brightness} onChange={
-                    e => SetBrightness(id, int(e.target.value))
+                    e => SetBrightness(id, e.target.value)
                 } />
             </div>
         </>
