@@ -16,7 +16,7 @@
 
 void Connect_Wifi();
 
-// void GET_data(void *param);
+void GET_data(void *param);
 void manual_input(void *param);
 void disco(void *param);
 
@@ -45,7 +45,7 @@ const int threshold = 20;
 int touch_value_room1, touch_value_room2, touch_value_room3;
 int ready_room1 = 1, ready_room2 = 1, ready_room3 = 1;
 
-String url = "http://ecourse.cpe.ku.ac.th/exceed09/rooms";
+String url = "https://ecourse.cpe.ku.ac.th/exceed09/rooms";
 
 void setup() {
   Serial.begin(115200);
@@ -66,7 +66,7 @@ void setup() {
   debouncer.attach(button, INPUT_PULLUP);
   debouncer.interval(25);
 
-  // xTaskCreatePinnedToCore(GET_data, "GET_data", 20*1024, NULL, 1, &TaskB, 0);
+  xTaskCreatePinnedToCore(GET_data, "GET_data", 20*1024, NULL, 1, &TaskB, 0);
   xTaskCreatePinnedToCore(manual_input, "manual_input", 10*1024, NULL, 1, &TaskA, 0);
   xTaskCreatePinnedToCore(disco, "disco", 3000, NULL, 1, &TaskF, 0);
 
@@ -129,42 +129,42 @@ void manual_input(void *param) {
   }
 }
 
-// void GET_data(void *param) {
-//   while (1) {
-//     Serial.println("GET_data");
-//     DynamicJsonDocument doc(2048);
-//     HTTPClient http;
+ void GET_data(void *param) {
+   while (1) {
+     Serial.println("GET_data");
+     DynamicJsonDocument doc(2048);
+     HTTPClient http;
     
-//     http.begin(url);
-//     int httpCode = http.GET();
-//     Serial.println(httpCode);
-//     if (httpCode >= 200 && httpCode < 300) {
-//       String payload = http.getString();
-//       deserializeJson(doc, payload);
+     http.begin(url);
+     int httpCode = http.GET();
+     Serial.println(httpCode);
+     if (httpCode >= 200 && httpCode < 300) {
+       String payload = http.getString();
+       deserializeJson(doc, payload);
       
-//       for (int i = 0; i < 3; i++) {
-//         modeauto_room[i] = doc["message"][i]["mode_auto"];
-//         brightness_room[i] = doc["message"][i]["brightness"];
-//         onstatus_room[i] = doc["message"][i]["on_status"];
-//         change_room[i] = doc["message"][i]["is_change"];
-//         // Serial.print("------ room_id: ");
-//         // Serial.println(doc["message"][i]["room_id"]);
-//         // Serial.print("modeauto: ");
-//         // Serial.println(modeauto_room[i]);
-//         // Serial.print("brightness: ");
-//         // Serial.println(brightness_room[i]);
-//         // Serial.print("onstatus: ");
-//         // Serial.println(onstatus_room[i]);
-//         // Serial.print("change: ");
-//         // Serial.println(change_room[i]);
-//       }
-//     } else {
-//       Serial.println("Error on HTTP request");
-//     }
-//     http.end();
-//     vTaskDelay(5/portTICK_PERIOD_MS);
-//   }
-// }
+       for (int i = 0; i < 3; i++) {
+         modeauto_room[i] = doc["message"][i]["mode_auto"];
+         brightness_room[i] = doc["message"][i]["brightness"];
+         onstatus_room[i] = doc["message"][i]["on_status"];
+         change_room[i] = doc["message"][i]["is_change"];
+         // Serial.print("------ room_id: ");
+         // Serial.println(doc["message"][i]["room_id"]);
+         // Serial.print("modeauto: ");
+         // Serial.println(modeauto_room[i]);
+         // Serial.print("brightness: ");
+         // Serial.println(brightness_room[i]);
+         // Serial.print("onstatus: ");
+         // Serial.println(onstatus_room[i]);
+         // Serial.print("change: ");
+         // Serial.println(change_room[i]);
+       }
+     } else {
+       Serial.println("Error on HTTP request");
+     }
+     http.end();
+     vTaskDelay(5/portTICK_PERIOD_MS);
+   }
+ }
 
 void disco(void *param) {
   while (1) {
