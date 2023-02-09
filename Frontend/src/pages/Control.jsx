@@ -17,11 +17,17 @@ const Control = ({ id }) => {
                 res = res["message"]
                 setIsOn(res[id - 1].on_status)
                 setIsAuto(res[id - 1].mode_auto)
-                setBrightness(res[id - 1].brightness)
+                // setBrightness(res[id - 1].brightness)
             }).catch((err) => {
                 console.log(err)
             })
         }, 100)
+        GetData().then((res) => {
+            res = res["message"]
+            setBrightness(res[id - 1].brightness)
+        }).catch((err) => {
+            console.log(err)
+        })
     }, [])
 
     return (
@@ -36,8 +42,11 @@ const Control = ({ id }) => {
                     e => SetMode(id, !isAuto)
                 } />
 
-                <TextFormField name="Brightness" value={brightness} onChange={
-                    e => SetBrightness(id, e.target.value)
+                <TextFormField name="Brightness (1-255)" value={brightness} onChange={
+                    e => {
+                        SetBrightness(id, e.target.value)
+                        setBrightness(e.target.value)
+                    }
                 } />
             </div>
         </>
